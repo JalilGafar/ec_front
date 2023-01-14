@@ -1,0 +1,24 @@
+{
+  "name": "ec_back",
+  "version": "1.0.0",
+  "description": "backend de l'application ecolecamer",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JalilGafar/ec_back.git"
+  },
+  "author": "Jalil Fonda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JalilGafar/ec_back/issues"
+  },
+  "homepage": "https://github.com/JalilGafar/ec_back#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "g": "^2.0.1",
+    "nodemon": "^2.0.20"
+  }
+}
