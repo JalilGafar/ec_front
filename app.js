@@ -278,7 +278,7 @@ app.post('/newEcole', (req, res, next) => {
 });
 
 
-/**Modification d'une nouvelle Ecole */
+/**Modification d'une Ecole */
 app.put('/editEcole', (req, res) =>{
     var editForm = req.body;
     con.query(SQL
@@ -309,6 +309,22 @@ app.put('/editEcole', (req, res) =>{
             console.log('ECOLE record Update');
         }
     );
+})
+
+
+//** DELET ECOLE  */
+app.delete('/deletEcole', (req, res) => {
+    var idEcole = req.query.idEcole;    
+    con.query(`DELETE FROM ecoles WHERE (id_ecol = ${idEcole} )`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('Ecole DELETED !');
+        }
+        );
 })
 
 //***!!!!!!!!!!!!!!!!!! CAMPUS REQUEST !!!!!!!!!!!!!!!!!!!!! */
