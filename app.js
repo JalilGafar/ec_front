@@ -12,8 +12,10 @@ var con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "Orange2023@BROWN",
-    database: 'ecolecamerdb'
+    database: 'ecolecamerdb',
+    multipleStatements: true
 });
+  
   
 con.connect(function(err) {
 	if (err) {
@@ -161,12 +163,81 @@ app.get('/universites', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log(JSON.stringify(result));
+            console.log('Chargement des Universités');
             res.status(200).json(result);
             return;
         }
     );
 });
+
+/**Ajout d'une nouvelle Université */
+app.post('/newUniversites', (req, res, next) => {
+    var uForm = req.body
+    con.query(SQL
+                `INSERT INTO universites
+                (nom_univ, sigle_univ, type_univ, ville_univ, tel_univ, email_univ, siteweb_univ, recteur_univ, mot_du_recteur, descriptif_univ) 
+                VALUES (${uForm.nom_univ}, ${uForm.sigle_univ}, ${uForm.type_univ}, ${uForm.ville_univ}, ${uForm.tel_univ}, ${uForm.email_univ}, ${uForm.siteweb_univ}, ${uForm.recteur_univ}, ${uForm.mot_du_recteur}, ${uForm.descriptif_univ});`,
+                function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                        res.sendStatus(500);
+                        return;
+                    };
+                    console.log('record inserted');
+                }
+            );
+});
+
+/**Mise a jour d'une université */
+app.put('/editUniversite', (req, res, next)=>{
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!');
+    var editForm = req.body;
+    con.query(SQL
+                `UPDATE universites 
+                SET 
+                    nom_univ = ${editForm.nom_univ},
+                    sigle_univ = ${editForm.sigle_univ},
+                    type_univ = ${editForm.type_univ},
+                    ville_univ = ${editForm.ville_univ},
+                    tel_univ = ${editForm.tel_univ},
+                    email_univ = ${editForm.email_univ},
+                    siteweb_univ = ${editForm.siteweb_univ},
+                    recteur_univ = ${editForm.recteur_univ},
+                    mot_du_recteur = ${editForm.mot_du_recteur},
+                    descriptif_univ = ${editForm.descriptif_univ} 
+                WHERE (id_univ = ${editForm.id_univ});
+                `,
+                function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                        res.sendStatus(500);
+                        return;
+                    };
+                    console.log('record Update');
+                }
+            );
+});
+
+/** Supression d'une Université */
+
+app.delete('/deletUniversite', (req, res) => {
+    var idUniv = req.query.idUniv;    
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!');
+    console.log('we wan to delet UNIV with ID : '+ idUniv);
+    con.query(`DELETE FROM universites WHERE (id_univ = ${idUniv} )`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('Univ DELETED !');
+        }
+        );
+})
+
+//**!!!!!!!!!!!!!!!!! ECOLE REQUES !!!!!!!!!!!!!!!!!!!!!!!!!! */
+
 
 //** Vue des Ecoles depuis Admin */
 app.get('/ecoles', (req, res, next) => {
@@ -177,13 +248,70 @@ app.get('/ecoles', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log(JSON.stringify(result));
+            console.log('Chargement des Ecoles');
             res.status(200).json(result);
             return;
         }
     );
 });
 
+/**Ajout d'une nouvelle Ecole */
+app.post('/newEcole', (req, res, next) => {
+    var ecoleForm = req.body
+    con.query(SQL
+                `INSERT INTO ecoles
+                (nom_e, sigle_e, logo_e, niveau_e, langue_e, date_creation, tel_1_e, email_e, bp_e, directeur_e, photo_directeur, mot_directeur, stat_e, descriptif_e, image_e, universites_id) 
+                VALUES (${ecoleForm.nom_e}, ${ecoleForm.sigle_e}, ${ecoleForm.logo_e}, ${ecoleForm.niveau_e}, ${ecoleForm.langue_e}, ${ecoleForm.date_creation}, ${ecoleForm.tel_1_e}, ${ecoleForm.email_e}, ${ecoleForm.bp_e}, ${ecoleForm.directeur_e}, ${ecoleForm.photo_directeur}, ${ecoleForm.mot_directeur}, ${ecoleForm.stat_e}, ${ecoleForm.descriptif_e}, ${ecoleForm.image_e}, ${ecoleForm.universites_id});
+                SELECT LAST_INSERT_ID() INTO @mysql_variable;
+                INSERT INTO campus_ecoles 
+                (campus_id, ecole_id) 
+                VALUES (${ecoleForm.campus_id}, @mysql_variable);`,
+                function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                        res.sendStatus(500);
+                        return;
+                    };
+                    console.log('record inserted');
+                }
+            );
+});
+
+
+/**Modification d'une nouvelle Ecole */
+app.put('/editEcole', (req, res) =>{
+    var editForm = req.body;
+    con.query(SQL
+        `UPDATE ecoles 
+        SET 
+            nom_e = ${editForm.nom_e},
+            sigle_e = ${editForm.sigle_e},
+            logo_e = ${editForm.logo_e},
+            niveau_e = ${editForm.niveau_e},
+            langue_e = ${editForm.langue_e},
+            tel_1_e = ${editForm.tel_1_e},
+            email_e = ${editForm.email_e},
+            bp_e = ${editForm.bp_e},
+            directeur_e = ${editForm.directeur_e},
+            photo_directeur = ${editForm.photo_directeur},
+            mot_directeur = ${editForm.mot_directeur},
+            stat_e = ${editForm.stat_e},
+            descriptif_e = ${editForm.descriptif_e},
+            image_e = ${editForm.image_e}
+        WHERE (id_ecol = ${editForm.id_ecol});
+        `,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('ECOLE record Update');
+        }
+    );
+})
+
+//***!!!!!!!!!!!!!!!!!! CAMPUS REQUEST !!!!!!!!!!!!!!!!!!!!! */
 
 //** Vue des Campus depuis Admin */
 app.get('/campus', (req, res, next) => {
@@ -194,12 +322,76 @@ app.get('/campus', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log(JSON.stringify(result));
+            console.log('Chargement des Campus');
             res.status(200).json(result);
             return;
         }
     );
 });
+
+
+
+//** EDITER UN CAMPUS */
+app.put('/editCampus', (req, res) =>{
+    var editForm = req.body;
+    con.query(SQL
+        `UPDATE campus 
+        SET 
+            nom_camp = ${editForm.nom_camp},
+            ville_cam = ${editForm.ville_cam},
+            principal_camp = ${editForm.principal_camp},
+            descriptif_camp = ${editForm.descriptif_camp},
+            lon_camp = ${editForm.lon_camp},
+            lat_camp = ${editForm.lat_camp}
+        WHERE (id_camp = ${editForm.id_camp});
+        `,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('CAMPUS record Update');
+        }
+    );
+})
+
+/**Ajout d'un nouveau Campus */
+app.post('/newCampus', (req, res) => {
+    var campForm = req.body
+    con.query(SQL
+                `INSERT INTO campus
+                (nom_camp, ville_cam, principal_camp, descriptif_camp, lon_camp, lat_camp) 
+                VALUES (${campForm.nom_camp}, ${campForm.ville_cam}, ${campForm.principal_camp}, ${campForm.descriptif_camp}, ${campForm.lon_camp}, ${campForm.lat_camp});
+                `,
+                function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                        res.sendStatus(500);
+                        return;
+                    };
+                    console.log('record of Campus inserted');
+                }
+            );
+});
+
+//** DELET CAMPUS */
+app.delete('/deletCampus', (req, res) => {
+    var idCamp = req.query.idCamp;    
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!');
+    console.log('we wan to delet CAMPUS with ID : '+ idCamp);
+    con.query(`DELETE FROM campus WHERE (id_camp = ${idCamp} )`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('Campus DELETED !');
+        }
+        );
+})
+
 //**Appel sous Admin de toutes les formation avec leur université, école, campus, ville, catégorie de diplome */
 app.get('/formations', (req, res, next) => {
     con.query(SQL 
@@ -241,7 +433,7 @@ app.get('/formations', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log(JSON.stringify(result));
+            console.log('Chargement des Formations avec Liaison au campus et Univ');
             res.status(200).json(result);
             return;
         }
@@ -249,7 +441,7 @@ app.get('/formations', (req, res, next) => {
 });
 
 
-
+/**recherche des domaines disponible pour un diplome défini */
 app.get('/field', (req, res, next) => {
     var domaineDegree = req.query.DomaineDegree;
     console.log('recherche des domaines disponible pour le diplome '+ domaineDegree);
@@ -305,30 +497,10 @@ app.get('/field', (req, res, next) => {
     }
 
 });
-/*
-  app.get('/degree', (req, res, next) => {
-    console.dir(req.originalUrl);
-        con.query("SELECT nom_cat, groupe FROM categories order by groupe;", 
-                function (err, result, fields) {
-                    if (err) {
-                        console.log(err);
-                        res.sendStatus(500);
-                        return;
-                    };
-                    console.log(JSON.stringify(result));
-                    res.status(200).json(result);
-                    return;
-                }
-        ); 
-    });
-*/
+
     app.get('/degree', (req, res, next)=>{
-        //console.dir(req.originalUrl);
         var degreeCyti = req.query.DegreeCyti;
         var degreeField = req.query.DegreeField;
-        //console.log(degreeCyti);
-        //var degreeCyti = 'Foumban';
-        //console.log('recherche des diplomes disponible à '+ degreeCyti);
         if (degreeCyti === undefined && degreeField === undefined) {
             
         } else if (degreeCyti !== 'tous' && degreeCyti !== undefined ) {
