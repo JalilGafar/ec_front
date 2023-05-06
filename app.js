@@ -75,8 +75,34 @@ app.get('/topNewsSlide', (req, res, next) => {
 );
 
 
+//*********** GET DOMAINE AND CATEGORIES ***************** */
+app.get('/domaine', (req, res, next) => {
+    con.query("SELECT id_dom, nom_dom FROM domaines;", 
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            res.status(200).json(result);
+            return;
+        }
+    );
+});
 
-
+app.get('/categ', (req, res, next) => {
+    con.query("SELECT id_cat, nom_cat FROM categories;", 
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            res.status(200).json(result);
+            return;
+        }
+    );
+});
 
 
 app.get('/partCyties', (req, res, next) => {
@@ -408,10 +434,14 @@ app.delete('/deletCampus', (req, res) => {
         );
 })
 
+
+//**************** FORMATION REQUEST ********************/
+
+
 //**Appel sous Admin de toutes les formation avec leur université, école, campus, ville, catégorie de diplome */
 app.get('/formations', (req, res, next) => {
     con.query(SQL 
-                `select id_form as id, nom_f, nom_cat as categorie, ville_cam as ville, nom_univ as universite, nom_camp as campus 
+                `select id_form , nom_f, nom_cat, ville_cam , nom_univ , nom_camp, date_debut_f, duree_f, cout_f, programme_f, descriptif_f 
                 from
                     campus
                     join
@@ -454,6 +484,32 @@ app.get('/formations', (req, res, next) => {
             return;
         }
     );
+});
+
+/***** Ajout d'une nouvelle formation *********************/
+app.post('/newFormation', (req, res, next) => {
+    var FormationForm = req.body
+    con.query(SQL
+                `INSERT INTO diplomes
+                (nom_dip, admission, descriptif_dip, categorie_id, conditions, niveau)
+                VALUES (${FormationForm.nom_diplome}, ${FormationForm.admission_diplome}, ${FormationForm.descriptif_diplome}, ${FormationForm.categ_id}, ${FormationForm.condition_diplome}, ${FormationForm.niveau_diplome});
+                SELECT LAST_INSERT_ID() INTO @mysql_variable;
+                INSERT INTO formations
+                (nom_f, date_debut_f, duree_f, cout_f, programme_f, descriptif_f, ecole_f_id, diplom_id) 
+                VALUES (${FormationForm.nom_f}, ${FormationForm.date_debut_f}, ${FormationForm.duree_f}, ${FormationForm.cout_f}, ${FormationForm.programme_f}, ${FormationForm.descriptif_f}, ${FormationForm.ecole_id}, @mysql_variable);
+                SELECT LAST_INSERT_ID() INTO @mysql_variable;
+                INSERT INTO domaines_formations
+                (domaines_id, formations_id) 
+                VALUES (${FormationForm.domaine_id}, @mysql_variable);`,
+                function (err, result, fields) {
+                    if (err) {
+                        console.log(err);
+                        res.sendStatus(500);
+                        return;
+                    };
+                    console.log('record inserted');
+                }
+            );
 });
 
 
