@@ -323,7 +323,8 @@ app.put('/editEcole', (req, res) =>{
             mot_directeur = ${editForm.mot_directeur},
             stat_e = ${editForm.stat_e},
             descriptif_e = ${editForm.descriptif_e},
-            image_e = ${editForm.image_e}
+            image_e = ${editForm.image_e},
+            Universites_id = ${editForm.universites_id}
         WHERE (id_ecol = ${editForm.id_ecol});
         `,
         function (err, result, fields) {
@@ -332,7 +333,18 @@ app.put('/editEcole', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
-            console.log('ECOLE record Update');
+            console.log('ECOLE record Update 1/2');
+        }
+    );
+    con.query(SQL
+        `CALL galager_procedure (${editForm.id_ecol},${editForm.campus_id});`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('ECOLE record Update 2/2');
         }
     );
 })
@@ -398,6 +410,7 @@ app.put('/editCampus', (req, res) =>{
     );
 })
 
+
 /**Ajout d'un nouveau Campus */
 app.post('/newCampus', (req, res) => {
     var campForm = req.body
@@ -441,7 +454,7 @@ app.delete('/deletCampus', (req, res) => {
 //**Appel sous Admin de toutes les formation avec leur université, école, campus, ville, catégorie de diplome */
 app.get('/formations', (req, res, next) => {
     con.query(SQL 
-                `select id_form , nom_f, nom_cat, ville_cam , nom_univ , nom_camp, date_debut_f, duree_f, cout_f, programme_f, descriptif_f 
+                `select id_form , nom_f, nom_dip, diplom_id AS diplome_id, categorie_id, ecole_f_id, nom_cat, ville_cam, admission AS admission_diplome, descriptif_dip, conditions AS condition_diplome, niveau AS niveau_diplome, nom_univ, nom_camp, date_debut_f, duree_f, cout_f, programme_f, descriptif_f 
                 from
                     campus
                     join
@@ -487,12 +500,13 @@ app.get('/formations', (req, res, next) => {
 });
 
 /***** Ajout d'une nouvelle formation *********************/
+
 app.post('/newFormation', (req, res, next) => {
     var FormationForm = req.body
     con.query(SQL
                 `INSERT INTO diplomes
                 (nom_dip, admission, descriptif_dip, categorie_id, conditions, niveau)
-                VALUES (${FormationForm.nom_diplome}, ${FormationForm.admission_diplome}, ${FormationForm.descriptif_diplome}, ${FormationForm.categ_id}, ${FormationForm.condition_diplome}, ${FormationForm.niveau_diplome});
+                VALUES (${FormationForm.nom_dip}, ${FormationForm.admission_diplome}, ${FormationForm.descriptif_diplome}, ${FormationForm.categ_id}, ${FormationForm.condition_diplome}, ${FormationForm.niveau_diplome});
                 SELECT LAST_INSERT_ID() INTO @mysql_variable;
                 INSERT INTO formations
                 (nom_f, date_debut_f, duree_f, cout_f, programme_f, descriptif_f, ecole_f_id, diplom_id) 
@@ -512,6 +526,70 @@ app.post('/newFormation', (req, res, next) => {
             );
 });
 
+//*************MODIFIER UNE FORMATION EXISTANTE ******************///
+app.put('/editformation', (req, res) =>{
+    var editForm = req.body;
+    con.query(SQL
+        `UPDATE formations 
+        SET 
+            nom_f = ${editForm.nom_f},
+            date_debut_f = ${editForm.date_debut_f},
+            duree_f = ${editForm.duree_f},
+            cout_f = ${editForm.cout_f},
+            programme_f = ${editForm.programme_f},
+            descriptif_f = ${editForm.descriptif_f},
+            ecole_f_id =${editForm.ecole_id}
+        WHERE (id_form = ${editForm.id_form});
+        `,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('FORMATION 1 record Update');
+        }
+    );
+    con.query(SQL
+        `UPDATE diplomes
+        SET
+            nom_dip = ${editForm.nom_dip},
+            admission = ${editForm.admission_diplome},
+            descriptif_dip = ${editForm.descriptif_diplome},
+            conditions = ${editForm.condition_diplome},
+            niveau = ${editForm.niveau_diplome},
+            categorie_id = ${editForm.categ_id}
+        WHERE (id_dip = ${editForm.diplome_id});
+        UPDATE domaines_formations
+        SET
+            domaines_id = ${editForm.domaine_id}
+        WHERE (formations_id = ${editForm.id_form})
+        `,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('FORMATION 2 record Update');
+        }
+    );
+    con.query(SQL
+        `UPDATE domaines_formations
+        SET
+            domaines_id = ${editForm.domaine_id}
+        WHERE (formations_id = ${editForm.id_form})
+        `,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('FORMATION 3 record Update');
+        }
+    );
+})
 
 /**recherche des domaines disponible pour un diplome défini */
 app.get('/field', (req, res, next) => {
