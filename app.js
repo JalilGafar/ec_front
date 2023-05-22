@@ -1,14 +1,61 @@
 const express = require ('express');
 
 var cors = require('cors');
+const cookieSession = require("cookie-session");
 var mysql = require('mysql');
 var SQL = require('sql-template-strings')
 var app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
-var con = mysql.createConnection({
+app.use(
+cookieSession({
+    name: "bezkoder-session",
+    secret: "COOKIE_SECRET", // should use as secret environment variable
+    httpOnly: true
+})
+);
+
+require('./routes/auth.routes')(app);
+require('./routes/user.routes')(app);
+
+const db = require("./models");
+const Role = db.role;
+
+db.sequelize.sync({force: true}).then(() => {
+    console.log('Drop and Resync Db');
+    initial();
+});
+
+
+
+function initial() {
+    Role.create({
+      id: 1,
+      name: "user"
+    });
+   
+    Role.create({
+      id: 2,
+      name: "moderator"
+    });
+   
+    Role.create({
+      id: 3,
+      name: "admin"
+    });
+}
+
+//db.sequelize.sync();
+
+// simple route
+app.get("/", (req, res) => {
+    res.json({ message: "Welcome to bezkoder application." });
+});
+
+const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "Orange2023@BROWN",
@@ -559,12 +606,7 @@ app.put('/editformation', (req, res) =>{
             conditions = ${editForm.condition_diplome},
             niveau = ${editForm.niveau_diplome},
             categorie_id = ${editForm.categ_id}
-        WHERE (id_dip = ${editForm.diplome_id});
-        UPDATE domaines_formations
-        SET
-            domaines_id = ${editForm.domaine_id}
-        WHERE (formations_id = ${editForm.id_form})
-        `,
+        WHERE (id_dip = ${editForm.diplome_id});`,
         function (err, result, fields) {
             if (err) {
                 console.log(err);
@@ -575,7 +617,7 @@ app.put('/editformation', (req, res) =>{
         }
     );
     con.query(SQL
-        `UPDATE domaines_formations
+        `UPDATE IGNORE domaines_formations
         SET
             domaines_id = ${editForm.domaine_id}
         WHERE (formations_id = ${editForm.id_form})
@@ -589,6 +631,22 @@ app.put('/editformation', (req, res) =>{
             console.log('FORMATION 3 record Update');
         }
     );
+})
+
+//*********** SUPRIMER UNE FORMATION *********************/
+
+app.delete('/deletFormation', (req, res) => {
+    var idForm = req.query.idForm;    
+    con.query(`DELETE FROM formations WHERE (id_form = ${idForm} )`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            console.log('Formation DELETED !');
+        }
+        );
 })
 
 /**recherche des domaines disponible pour un diplome défini */
