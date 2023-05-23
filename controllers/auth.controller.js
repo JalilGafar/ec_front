@@ -70,14 +70,15 @@ exports.signin = async (req, res) => {
     for (let i = 0; i < roles.length; i++) {
       authorities.push("ROLE_" + roles[i].name.toUpperCase());
     }
-
+ 
     req.session.token = token;
 
     return res.status(200).send({
       id: user.id,
       username: user.username,
-      email: user.email,
+      email: user.email, 
       roles: authorities,
+      accessToken: token
     });
   } catch (error) {
     return res.status(500).send({ message: error.message });
