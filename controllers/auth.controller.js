@@ -47,7 +47,7 @@ exports.signin = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send({ message: "User Not found." });
+      return res.status(404).send({ message: "La paire Username / Password n'est pas valide !" });
     }
 
     const passwordIsValid = bcrypt.compareSync(
@@ -57,13 +57,15 @@ exports.signin = async (req, res) => {
 
     if (!passwordIsValid) {
       return res.status(401).send({
-        message: "Invalid Password!",
+        message: "La paire Username / Password n'est pas valide !",
       });
     }
 
-    const token = jwt.sign({ id: user.id }, config.secret, {
-      expiresIn: 86400, // 24 hours
-    });
+    const token = jwt.sign(
+                            { id: user.id }, 
+                            config.secret, 
+                            { expiresIn: 86400}, // 24 hours
+    );
 
     let authorities = [];
     const roles = await user.getRoles();

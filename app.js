@@ -30,9 +30,9 @@ const ecolesRoutes = require('./routes/ecoles');
 const campusRoutes = require ('./routes/campus');
 const formationsRoutes = require ('./routes/formation');
 
-db.sequelize.sync({force: true}).then(() => {
+db.sequelize.sync(/*{force: true}*/).then(() => {
     console.log('Drop and Resync Db');
-    initial();
+   // initial();
 });
 
 
