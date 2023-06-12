@@ -29,6 +29,8 @@ const universiteRoutes = require('./routes/universite');
 const ecolesRoutes = require('./routes/ecoles');
 const campusRoutes = require ('./routes/campus');
 const formationsRoutes = require ('./routes/formation');
+const interestRoutes = require ('./routes/interest');
+const resultatsRoutes = require ('./routes/resultats');
 
 db.sequelize.sync(/*{force: true}*/).then(() => {
     console.log('Drop and Resync Db');
@@ -146,7 +148,7 @@ if (domaine && degree) {
                 res.sendStatus(500);
                 return;
             };
-            console.log(JSON.stringify(result));
+           // console.log(JSON.stringify(result));
             res.status(200).json(result);
             return;
         }
@@ -164,7 +166,7 @@ app.get('/api/cyties', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log(JSON.stringify(result));
+           // console.log(JSON.stringify(result));
             res.status(200).json(result);
             return;
         }
@@ -186,6 +188,14 @@ app.use('/api/campus', campusRoutes);
 
 //**************** FORMATION REQUEST ********************/
 app.use('/api/formations', formationsRoutes);
+
+
+//**************** INTEREST REQUEST ********************/
+app.use('/api/interest', interestRoutes);
+
+
+//**************** INTEREST REQUEST ********************/
+app.use('/api/result', resultatsRoutes);
 
 
 /**recherche des domaines disponible pour un diplome défini */
@@ -225,7 +235,7 @@ app.get('/api/field', (req, res, next) => {
                     res.sendStatus(500);
                     return;
                 };
-                console.log(JSON.stringify(result));
+               // console.log(JSON.stringify(result));
                 res.status(200).json(result);
                 return;
             }
@@ -237,7 +247,7 @@ app.get('/api/field', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log(JSON.stringify(result));
+           // console.log(JSON.stringify(result));
             res.status(200).json(result);
             return;
         });
@@ -286,7 +296,7 @@ app.get('/api/degree', (req, res, next)=>{
                     res.sendStatus(500);
                     return;
                 };
-                console.log(JSON.stringify(result));
+               // console.log(JSON.stringify(result));
                 res.status(200).json(result);
                 return;
             }
@@ -322,7 +332,7 @@ app.get('/api/degree', (req, res, next)=>{
                     res.sendStatus(500);
                     return;
                 };
-                console.log(JSON.stringify(result));
+               // console.log(JSON.stringify(result));
                 res.status(200).json(result);
                 return;
             }
@@ -335,7 +345,7 @@ app.get('/api/degree', (req, res, next)=>{
                     res.sendStatus(500);
                     return;
                 };
-                console.log(JSON.stringify(result));
+               // console.log(JSON.stringify(result));
                 res.status(200).json(result);
                 return;
             }
