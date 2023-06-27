@@ -24,8 +24,8 @@ router.post('/', (req, res, next) => {
     var ecoleForm = req.body
     con.query(SQL
                 `INSERT INTO ecoles
-                (nom_e, sigle_e, logo_e, niveau_e, langue_e, date_creation, tel_1_e, email_e, bp_e, directeur_e, photo_directeur, mot_directeur, stat_e, descriptif_e, image_e, universites_id) 
-                VALUES (${ecoleForm.nom_e}, ${ecoleForm.sigle_e}, ${ecoleForm.logo_e}, ${ecoleForm.niveau_e}, ${ecoleForm.langue_e}, ${ecoleForm.date_creation}, ${ecoleForm.tel_1_e}, ${ecoleForm.email_e}, ${ecoleForm.bp_e}, ${ecoleForm.directeur_e}, ${ecoleForm.photo_directeur}, ${ecoleForm.mot_directeur}, ${ecoleForm.stat_e}, ${ecoleForm.descriptif_e}, ${ecoleForm.image_e}, ${ecoleForm.universites_id});
+                (nom_e, sigle_e, logo_e, niveau_e, langue_e, date_creation, arrete_creation, arrete_ouverture, tel_1_e, email_e, bp_e, directeur_e, photo_directeur, mot_directeur, stat_e, descriptif_e, image_e, universites_id) 
+                VALUES (${ecoleForm.nom_e}, ${ecoleForm.sigle_e}, ${ecoleForm.logo_e}, ${ecoleForm.niveau_e}, ${ecoleForm.langue_e}, ${ecoleForm.date_creation}, ${ecoleForm.arrete_creation}, ${ecoleForm.arrete_ouverture}, ${ecoleForm.tel_1_e}, ${ecoleForm.email_e}, ${ecoleForm.bp_e}, ${ecoleForm.directeur_e}, ${ecoleForm.photo_directeur}, ${ecoleForm.mot_directeur}, ${ecoleForm.stat_e}, ${ecoleForm.descriptif_e}, ${ecoleForm.image_e}, ${ecoleForm.universites_id});
                 SELECT LAST_INSERT_ID() INTO @mysql_variable;
                 INSERT INTO campus_ecoles 
                 (campus_id, ecole_id) 

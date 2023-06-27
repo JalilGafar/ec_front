@@ -50,10 +50,11 @@ router.put('/', (req, res) =>{
 /**Ajout d'un nouveau Campus */
 router.post('/', (req, res) => {
     var campForm = req.body
+    console.log('begining Campus insertion !');
     con.query(SQL
                 `INSERT INTO campus
-                (nom_camp, ville_cam, principal_camp, descriptif_camp, lon_camp, lat_camp) 
-                VALUES (${campForm.nom_camp}, ${campForm.ville_cam}, ${campForm.principal_camp}, ${campForm.descriptif_camp}, ${campForm.lon_camp}, ${campForm.lat_camp});
+                (nom_camp, ville_cam, quartier_camp, principal_camp, descriptif_camp, lon_camp, lat_camp) 
+                VALUES (${campForm.nom_camp}, ${campForm.ville_cam}, ${campForm.quartier_camp}, ${campForm.principal_camp}, ${campForm.descriptif_camp}, ${campForm.lon_camp}, ${campForm.lat_camp});
                 `,
                 function (err, result, fields) {
                     if (err) {

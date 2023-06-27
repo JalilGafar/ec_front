@@ -6,7 +6,7 @@ var SQL = require('sql-template-strings');
 //**Appel sous Admin de toutes les formation avec leur université, école, campus, ville, catégorie de diplome */
 router.get('/', (req, res, next) => {
     con.query(SQL 
-                `select id_form , nom_f, nom_dip, diplom_id AS diplome_id, categorie_id, ecole_f_id, nom_cat, ville_cam, admission AS admission_diplome, descriptif_dip, conditions AS condition_diplome, niveau AS niveau_diplome, nom_univ, nom_camp, date_debut_f, duree_f, cout_f, programme_f, descriptif_f 
+                `select id_form , nom_f, nom_e, nom_dip, diplom_id AS diplome_id, categorie_id, ecole_f_id, nom_cat, ville_cam, admission AS admission_diplome, descriptif_dip, conditions_f AS condition_diplome, niveau AS niveau_diplome, nom_univ, nom_camp, date_debut_f, duree_f, cout_f, programme_f, descriptif_f 
                 from
                     campus
                     join
@@ -56,13 +56,9 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     var FormationForm = req.body
     con.query(SQL
-                `INSERT INTO diplomes
-                (nom_dip, admission, descriptif_dip, categorie_id, conditions, niveau)
-                VALUES (${FormationForm.nom_dip}, ${FormationForm.admission_diplome}, ${FormationForm.descriptif_diplome}, ${FormationForm.categ_id}, ${FormationForm.condition_diplome}, ${FormationForm.niveau_diplome});
-                SELECT LAST_INSERT_ID() INTO @mysql_variable;
-                INSERT INTO formations
+                `INSERT INTO formations
                 (nom_f, date_debut_f, duree_f, cout_f, programme_f, descriptif_f, ecole_f_id, diplom_id) 
-                VALUES (${FormationForm.nom_f}, ${FormationForm.date_debut_f}, ${FormationForm.duree_f}, ${FormationForm.cout_f}, ${FormationForm.programme_f}, ${FormationForm.descriptif_f}, ${FormationForm.ecole_id}, @mysql_variable);
+                VALUES (${FormationForm.nom_f}, ${FormationForm.date_debut_f}, ${FormationForm.duree_f}, ${FormationForm.cout_f}, ${FormationForm.programme_f}, ${FormationForm.descriptif_f}, ${FormationForm.ecole_id}, ${FormationForm.diplom_id});
                 SELECT LAST_INSERT_ID() INTO @mysql_variable;
                 INSERT INTO domaines_formations
                 (domaines_id, formations_id) 
@@ -73,7 +69,7 @@ router.post('/', (req, res, next) => {
                         res.sendStatus(500);
                         return;
                     };
-                    console.log('record inserted');
+                    console.log('record FORMATION inserted');
                 }
             );
 });
@@ -90,7 +86,8 @@ router.put('/', (req, res) =>{
             cout_f = ${editForm.cout_f},
             programme_f = ${editForm.programme_f},
             descriptif_f = ${editForm.descriptif_f},
-            ecole_f_id =${editForm.ecole_id}
+            ecole_f_id =${editForm.ecole_id},
+            diplom_id = ${editForm.diplome_id}
         WHERE (id_form = ${editForm.id_form});
         `,
         function (err, result, fields) {
@@ -99,26 +96,7 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
-            console.log('FORMATION 1 record Update');
-        }
-    );
-    con.query(SQL
-        `UPDATE diplomes
-        SET
-            nom_dip = ${editForm.nom_dip},
-            admission = ${editForm.admission_diplome},
-            descriptif_dip = ${editForm.descriptif_diplome},
-            conditions = ${editForm.condition_diplome},
-            niveau = ${editForm.niveau_diplome},
-            categorie_id = ${editForm.categ_id}
-        WHERE (id_dip = ${editForm.diplome_id});`,
-        function (err, result, fields) {
-            if (err) {
-                console.log(err);
-                res.sendStatus(500);
-                return;
-            };
-            console.log('FORMATION 2 record Update');
+            console.log('FORMATION 1/2 record Update');
         }
     );
     con.query(SQL
@@ -133,7 +111,7 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
-            console.log('FORMATION 3 record Update');
+            console.log('FORMATION 2/2 record Update');
         }
     );
 })

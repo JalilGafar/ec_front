@@ -3,7 +3,7 @@ const router =express.Router();
 var con = require('../db');
 var SQL = require('sql-template-strings');
 
-//** Vue des Ecoles depuis Admin */
+//** Enregistrement des informations clients */
 router.post('/', (req, res, next) => {
     var requestForm = req.body;
     console.log('UserInfo arrive ici !')
@@ -27,11 +27,12 @@ router.post('/', (req, res, next) => {
     );
 });
 
+//** Requete des formations qui repondent aux critères de recherche **/
 router.get('/', (req, res, next) => {
     var ville = req.query.city;
     var diplome = req.query.diplome;
     var domaine = req.query.domaine;
-    console.log('ville =' + ville + ' diplome ='+ diplome + 'et domaine ='+ domaine);
+    //console.log('ville =' + ville + ' diplome ='+ diplome + 'et domaine ='+ domaine);
     con.query(SQL
         `CALL serch_result_procedure (${ville}, ${diplome}, ${domaine})`, 
         function (err, result, fields) {
@@ -42,7 +43,7 @@ router.get('/', (req, res, next) => {
             };
             console.log('Envoie des RESULTATS !');
             res.status(200).json(result[0]);
-            console.log(result[0]);
+            //console.log(result[0]);
             return;
         }
     );
