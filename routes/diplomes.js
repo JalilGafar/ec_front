@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log('Chargement des Diplomes');
+           // console.log('Chargement des Diplomes');
             res.status(200).json(result);
             return;
         }
@@ -39,6 +39,7 @@ router.post('/', (req, res, next) => {
                         res.sendStatus(500);
                         return;
                     };
+                    res.sendStatus(200);
                     console.log('New Diplome Insert !');
                 }
             );
@@ -62,6 +63,7 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('DIPLOME record Update ');
         }
     );

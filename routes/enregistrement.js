@@ -18,6 +18,7 @@ router.post('/', (req, res, next) => {
                         res.sendStatus(500);
                         return;
                     };
+                    res.sendStatus(200);
                     console.log('Proposition d\'établissement reçu !');
                 }
             );

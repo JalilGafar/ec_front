@@ -12,7 +12,7 @@ router.get('/', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log('Chargement des Ecoles');
+           // console.log('Chargement des Ecoles');
             res.status(200).json(result);
             return;
         }
@@ -36,6 +36,7 @@ router.post('/', (req, res, next) => {
                         res.sendStatus(500);
                         return;
                     };
+                    res.sendStatus(200);
                     console.log('record inserted');
                 }
             );
@@ -82,6 +83,7 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('ECOLE record Update 2/2');
         }
     );
@@ -98,6 +100,7 @@ router.delete('/', (req, res) => {
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('Ecole DELETED !');
         }
         );

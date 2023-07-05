@@ -8,7 +8,8 @@ router.get('/', (req, res, next) => {
         //console.log(JSON.stringify(result));
         res.status(200).json(result);
     });
-    console.log("acces à TopNewsSlides !")
+    res.status(200);
+    //console.log("acces à TopNewsSlides !")
     }
 );
 

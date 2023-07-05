@@ -41,6 +41,7 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('CAMPUS record Update');
         }
     );
@@ -62,6 +63,7 @@ router.post('/', (req, res) => {
                         res.sendStatus(500);
                         return;
                     };
+                    res.sendStatus(200);
                     console.log('record of Campus inserted');
                 }
             );
@@ -79,6 +81,7 @@ router.delete('/', (req, res) => {
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('Campus DELETED !');
         }
         );

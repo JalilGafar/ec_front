@@ -33,7 +33,9 @@ const formationsRoutes = require ('./routes/formation');
 const interestRoutes = require ('./routes/interest');
 const resultatsRoutes = require ('./routes/resultats');
 const schoolDataRoutes = require ('./routes/schoolData');
+const diplomeDataRoutes = require ('./routes/diplomeData');
 const enregistrementRoutes = require ('./routes/enregistrement');
+const someDegreeRoutes = require ('./routes/someDegree');
 
 db.sequelize.sync(/*{force: true}*/).then(() => {
     console.log('Drop and Resync Db');
@@ -70,6 +72,8 @@ app.get("/", (req, res) => {
 
 
 app.use('/api/topNewsSlide', topNewsSlideRoutes);
+
+app.use('/api/someDegree', someDegreeRoutes);
 
 
 //*********** GET DOMAINE AND CATEGORIES ***************** */
@@ -207,6 +211,10 @@ app.use('/api/result', resultatsRoutes);
 //**************** SCHOOL DATA REQUEST ********************/
 app.use('/api/shoolData', schoolDataRoutes);
 
+
+//**************** Diplome DATA REQUEST ********************/
+app.use('/api/diplomeData', diplomeDataRoutes);
+
 //**************** SAVE NEW ETABLISSEMENT ********************/
 app.use('/api/ets', enregistrementRoutes);
 
@@ -254,16 +262,25 @@ app.get('/api/field', (req, res, next) => {
             }
         );
     } else if (domaineDegree === 'tous') {
-        con.query("SELECT nom_dom, branche_dom FROM domaines;", function (err, result, fields) {
-            if (err) {
-                console.log(err);
-                res.sendStatus(500);
+        con.query(SQL 
+            `SELECT distinct id_dom, nom_dom, branche_dom 
+            FROM domaines
+                join 
+                    domaines_formations
+                    on (domaines.id_dom = domaines_formations.domaines_id)
+                join 
+                    formations
+                    on (formations.id_form = domaines_formations.formations_id);`, 
+            function (err, result, fields) {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(500);
+                    return;
+                };
+            // console.log(JSON.stringify(result));
+                res.status(200).json(result);
                 return;
-            };
-           // console.log(JSON.stringify(result));
-            res.status(200).json(result);
-            return;
-        });
+            });
     } else if (domaineCyti !== undefined) {
         con.query(SQL
             `select distinct nom_dom, branche_dom

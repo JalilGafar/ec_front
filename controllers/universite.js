@@ -13,6 +13,7 @@ exports.creatUniv = (req, res, next) => {
                         res.sendStatus(500);
                         return;
                     };
+                    res.sendStatus(200);
                     console.log('record inserted');
                 }
             );
@@ -26,7 +27,7 @@ exports.getAllUniv = (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log('Chargement des Universités');
+           // console.log('Chargement des Universités');
             res.status(200).json(result);
             return;
         }
@@ -56,7 +57,8 @@ exports.updateUniv = (req, res, next)=>{
                         res.sendStatus(500);
                         return;
                     };
-                    console.log('record Update');
+                    res.sendStatus(200);
+                    console.log(editForm.nom_univ + ' Mis à jour !');
                 }
             );
 };
@@ -72,6 +74,7 @@ exports.deletUniv = (req, res) => {
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('Univ DELETED !');
         }
         );

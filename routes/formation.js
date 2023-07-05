@@ -6,7 +6,7 @@ var SQL = require('sql-template-strings');
 //**Appel sous Admin de toutes les formation avec leur université, école, campus, ville, catégorie de diplome */
 router.get('/', (req, res, next) => {
     con.query(SQL 
-                `select id_form , nom_f, nom_e, nom_dip, diplom_id AS diplome_id, categorie_id, ecole_f_id, nom_cat, ville_cam, admission AS admission_diplome, descriptif_dip, conditions_f AS condition_diplome, niveau AS niveau_diplome, nom_univ, nom_camp, date_debut_f, duree_f, cout_f, programme_f, descriptif_f 
+                `select id_form , nom_f, nom_e, nom_dip, diplom_id AS diplome_id, categorie_id, ecole_f_id, nom_cat, ville_cam, admission_f AS admission_diplome, descriptif_dip, conditions_f AS condition_diplome, niveau AS niveau_diplome, nom_univ, nom_camp, date_debut_f, duree_f, cout_f, programme_f, descriptif_f 
                 from
                     campus
                     join
@@ -44,7 +44,7 @@ router.get('/', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log('Chargement des Formations avec Liaison au campus et Univ');
+            //console.log('Chargement des Formations avec Liaison au campus et Univ');
             res.status(200).json(result);
             return;
         }
@@ -55,21 +55,28 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
     var FormationForm = req.body
+    console.log (FormationForm.nom_f)
     con.query(SQL
-                `INSERT INTO formations
-                (nom_f, date_debut_f, duree_f, cout_f, programme_f, descriptif_f, ecole_f_id, diplom_id) 
-                VALUES (${FormationForm.nom_f}, ${FormationForm.date_debut_f}, ${FormationForm.duree_f}, ${FormationForm.cout_f}, ${FormationForm.programme_f}, ${FormationForm.descriptif_f}, ${FormationForm.ecole_id}, ${FormationForm.diplom_id});
-                SELECT LAST_INSERT_ID() INTO @mysql_variable;
-                INSERT INTO domaines_formations
-                (domaines_id, formations_id) 
-                VALUES (${FormationForm.domaine_id}, @mysql_variable);`,
+                `CALL add_formation_procedure (${FormationForm.nom_f}, 
+                                                ${FormationForm.date_debut_f}, 
+                                                ${FormationForm.duree_f}, 
+                                                ${FormationForm.cout_f}, 
+                                                ${FormationForm.programme_f}, 
+                                                ${FormationForm.descriptif_f}, 
+                                                ${FormationForm.ecole_id}, 
+                                                ${FormationForm.diplom_id}, 
+                                                ${FormationForm.domaine_id}, 
+                                                ${FormationForm.condition_diplome},
+                                                ${FormationForm.admission_diplome})
+                `,
                 function (err, result, fields) {
                     if (err) {
                         console.log(err);
                         res.sendStatus(500);
                         return;
                     };
-                    console.log('record FORMATION inserted');
+                    res.sendStatus(200);
+                    console.log(FormationForm.nom_f+' Enregistré dans la table FORMATION !');
                 }
             );
 });
@@ -111,6 +118,7 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('FORMATION 2/2 record Update');
         }
     );
@@ -127,6 +135,7 @@ router.delete('/', (req, res) => {
                 res.sendStatus(500);
                 return;
             };
+            res.sendStatus(200);
             console.log('Formation DELETED !');
         }
         );
