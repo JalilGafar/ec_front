@@ -8,7 +8,8 @@ const sequelize = new Sequelize (
     {
         host: config.host,
         dialect: config.dialect,
-        operatorsAliases: false,
+       // operatorsAliases: false,
+        operatorsAliases: 0,
 
         pool: {
             max: config.pool.max,

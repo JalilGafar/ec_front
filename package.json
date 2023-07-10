@@ -29,5 +29,8 @@
     "nodemon": "^2.0.20",
     "sequelize": "^6.31.1",
     "sql-template-strings": "^2.2.2"
+  },
+  "engines": {
+    "node": "18.12.1"
   }
 }

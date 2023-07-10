@@ -14,7 +14,8 @@ con.connect(function(err) {
         console.log(err);
         res.sendStatus(500);
         return;
-    };
+    }
+    console.log('Database is connected successfully !');
 });
 
 module.exports = con;
