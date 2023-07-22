@@ -72,6 +72,22 @@ app.get("/", (req, res) => {
 });
 
 
+// Count all formations
+app.get("/api/countFomration", (req, res) => {
+    con.query("SELECT COUNT(*) as cont FROM formations;", 
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            res.status(200).json(result);
+            return;
+        }
+    );
+});
+
+
 
 
 

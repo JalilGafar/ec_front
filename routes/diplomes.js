@@ -69,5 +69,19 @@ router.put('/', (req, res) =>{
     );
 })
 
-
+//** DELET DIPLOME  */
+router.delete('/', (req, res) => {
+    var idDiplome = req.query.idDiplome;    
+    con.query(`DELETE FROM diplomes WHERE (id_dip = ${idDiplome} )`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            res.sendStatus(200);
+            console.log('Diplome DELETED !');
+        }
+        );
+});
 module.exports = router;

@@ -66,6 +66,8 @@ router.post('/', (req, res, next) => {
                                                 ${FormationForm.ecole_id}, 
                                                 ${FormationForm.diplom_id}, 
                                                 ${FormationForm.domaine_id}, 
+                                                ${FormationForm.domaine_id2}, 
+                                                ${FormationForm.domaine_id3}, 
                                                 ${FormationForm.condition_diplome},
                                                 ${FormationForm.admission_diplome})
                 `,
@@ -93,7 +95,7 @@ router.put('/', (req, res) =>{
             cout_f = ${editForm.cout_f},
             programme_f = ${editForm.programme_f},
             descriptif_f = ${editForm.descriptif_f},
-            ecole_f_id =${editForm.ecole_id},
+            ecole_f_id =${editForm.ecole_f_id},
             diplom_id = ${editForm.diplome_id}
         WHERE (id_form = ${editForm.id_form});
         `,
@@ -107,11 +109,10 @@ router.put('/', (req, res) =>{
         }
     );
     con.query(SQL
-        `UPDATE IGNORE domaines_formations
-        SET
-            domaines_id = ${editForm.domaine_id}
-        WHERE (formations_id = ${editForm.id_form})
-        `,
+        `CALL update_domaines_formations_procedure (${editForm.id_form},
+                                                    ${editForm.domaine_id},
+                                                    ${editForm.domaine_id2},
+                                                    ${editForm.domaine_id3})`,
         function (err, result, fields) {
             if (err) {
                 console.log(err);
