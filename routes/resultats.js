@@ -3,7 +3,8 @@ const router =express.Router();
 var con = require('../db');
 var SQL = require('sql-template-strings');
 
-//** Enregistrement des informations clients */
+//** Enregistrement des informations clients *****//
+
 router.post('/', (req, res, next) => {
     var requestForm = req.body;
     console.log('UserInfo arrive ici !')
@@ -32,9 +33,10 @@ router.get('/', (req, res, next) => {
     var ville = req.query.city;
     var diplome = req.query.diplome;
     var domaine = req.query.domaine;
+    var branche = req.query.branche;
     //console.log('ville =' + ville + ' diplome ='+ diplome + 'et domaine ='+ domaine);
     con.query(SQL
-        `CALL serch_result_procedure (${ville}, ${diplome}, ${domaine})`, 
+        `CALL serch_result_procedure (${ville}, ${diplome}, ${domaine}, ${branche})`, 
         function (err, result, fields) {
             if (err) {
                 console.log(err);
@@ -43,7 +45,7 @@ router.get('/', (req, res, next) => {
             };
             console.log('Envoie des RESULTATS !');
             res.status(200).json(result[0]);
-            //console.log(result[0]);
+            console.log(result[0]);
             return;
         }
     );
