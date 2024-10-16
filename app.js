@@ -39,6 +39,9 @@ const someDegreeRoutes = require ('./routes/someDegree');
 const partCytiesRoutes = require ('./routes/partCyties');
 const fieldRoutes = require ('./routes/field');
 const degreeRoutes = require ('./routes/degree');
+const actualiteRoutes = require ('./routes/actualite');
+const avisRoutes = require ('./routes/avis');
+const ecoleAvisRoutes = require ('./routes/ecoleAvis');
 
 db.sequelize.sync(/*{force: true}*/).then(() => {
    // console.log('Drop and Resync Db');
@@ -196,6 +199,15 @@ app.use('/api/field', fieldRoutes);
 
 /** Recherche de dipllome pour une ville ou un domaine définit **********/
 app.use('/api/degree', degreeRoutes);
+
+/** Module des actualités **********/
+app.use('/api/actualite', actualiteRoutes);
+
+/** Module des avis depuis admin **********/
+app.use('/api/avis', avisRoutes);
+
+/** Module des avis depuis USER **********/
+ app.use('/api/ecoleavis', ecoleAvisRoutes);
 
 
 module.exports = app;

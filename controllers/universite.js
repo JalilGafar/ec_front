@@ -10,11 +10,11 @@ exports.creatUniv = (req, res, next) => {
                 function (err, result, fields) {
                     if (err) {
                         console.log(err);
-                        res.sendStatus(500);
+                        res.sendStatus(500);    
                         return;
                     };
                     res.sendStatus(200);
-                    console.log('record inserted');
+                    console.log('record Univ inserted');
                 }
             );
 };
@@ -27,7 +27,7 @@ exports.getAllUniv = (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-           // console.log('Chargement des Universités');
+             console.log('Chargement des Universités');
             res.status(200).json(result);
             return;
         }

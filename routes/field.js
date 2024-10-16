@@ -14,25 +14,18 @@ router.get('/', (req, res, next) => {
             from 	
                 domaines
                 join
-                    domaines_formations
-                    on (domaines.id_dom = domaines_formations.domaines_id)
+                    domaines_diplomes
+                    on (domaines.id_dom = domaines_diplomes.domaines_id)
                 Join
-                    (	
-                        select * 
+                    (	select * 
                         from 
-                            formations
-                            Join
-                                (	select * 
-                                    from 
-                                        diplomes
-                                        join 
-                                            categories
-                                            on (categories.id_cat = diplomes.categorie_id)
-                                        where (categories.nom_cat LIKE ${domaineDegree})
-                                ) dc
-                                on (dc.id_dip = formations.diplom_id)
-                    ) ev
-                    on (ev.id_form = domaines_formations.formations_id)`, 
+                            diplomes
+                            join 
+                                categories
+                                on (categories.id_cat = diplomes.categorie_id)
+                            where (categories.nom_cat LIKE ${domaineDegree})
+                    ) dc
+                    on (dc.id_dip = domaines_diplomes.diplomes_id)`, 
             function (err, result, fields) {
                 if (err) {
                     console.log(err);

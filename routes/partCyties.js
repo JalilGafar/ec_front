@@ -19,33 +19,33 @@ router.get('/', (req, res, next) => {
                         from 
                             ecoles
                             join
-                                (	select * 
-                                    from 
-                                        domaines
-                                        join
-                                            domaines_formations
-                                            on (domaines.id_dom = domaines_formations.domaines_id)
-                                        join 
-                                            (	select * 
-                                                from 
-                                                    formations
-                                                    Join
-                                                        (	select * 
-                                                            from 
-                                                                diplomes
-                                                                join 
-                                                                    categories
-                                                                    on (categories.id_cat = diplomes.categorie_id)
-                                                                where (categories.nom_cat LIKE ${degree})
-                                                        ) dc
-                                                        on (dc.id_dip = formations.diplom_id)
-                                            ) ev
-                                            on (ev.id_form = domaines_formations.formations_id)
-                                        where (domaines.nom_dom like ${domaine})
-                                ) jk
-                                on (ecoles.id_ecol = jk.ecole_f_id)
-                    ) jl
-                    on (campus_ecoles.ecole_id = jl.id_ecol)`, 
+                            (	select * 
+                                from 
+                                    formations
+                                    Join
+                                    (	select * 
+                                        from 
+                                            domaines
+                                            join
+                                                domaines_diplomes
+                                                on (domaines.id_dom = domaines_diplomes.domaines_id)
+                                            join 
+                                                (	select * 
+                                                    from 
+                                                        diplomes
+                                                        join 
+                                                            categories
+                                                            on (categories.id_cat = diplomes.categorie_id)
+                                                        where (categories.nom_cat LIKE ${degree})
+                                                ) dipCateg
+                                                on (dipCateg.id_dip = domaines_diplomes.diplomes_id)
+                                            where (domaines.nom_dom like ${domaine})
+                                    ) dipCatDom
+                                    on (dipCatDom.id_dip = formations.diplom_id)
+                            ) dipCatDomForm
+                            on (ecoles.id_ecol = dipCatDomForm.ecole_f_id)
+                    ) dipCatDomFormEc
+                    on (campus_ecoles.ecole_id = dipCatDomFormEc.id_ecol)`, 
             function (err, result, fields) {
                 if (err) {
                     console.log(err);

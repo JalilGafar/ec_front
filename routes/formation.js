@@ -64,10 +64,7 @@ router.post('/', (req, res, next) => {
                                                 ${FormationForm.programme_f}, 
                                                 ${FormationForm.descriptif_f}, 
                                                 ${FormationForm.ecole_id}, 
-                                                ${FormationForm.diplom_id}, 
-                                                ${FormationForm.domaine_id}, 
-                                                ${FormationForm.domaine_id2}, 
-                                                ${FormationForm.domaine_id3}, 
+                                                ${FormationForm.diplom_id},
                                                 ${FormationForm.condition_diplome},
                                                 ${FormationForm.admission_diplome})
                 `,
@@ -95,6 +92,8 @@ router.put('/', (req, res) =>{
             cout_f = ${editForm.cout_f},
             programme_f = ${editForm.programme_f},
             descriptif_f = ${editForm.descriptif_f},
+            conditions_f = ${editForm.condition_diplome},
+            admission_f = ${editForm.admission_diplome},
             ecole_f_id =${editForm.ecole_f_id},
             diplom_id = ${editForm.diplome_id}
         WHERE (id_form = ${editForm.id_form});
@@ -105,24 +104,10 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
-            console.log('FORMATION 1/2 record Update');
-        }
-    );
-    con.query(SQL
-        `CALL update_domaines_formations_procedure (${editForm.id_form},
-                                                    ${editForm.domaine_id},
-                                                    ${editForm.domaine_id2},
-                                                    ${editForm.domaine_id3})`,
-        function (err, result, fields) {
-            if (err) {
-                console.log(err);
-                res.sendStatus(500);
-                return;
-            };
             res.sendStatus(200);
-            console.log('FORMATION 2/2 record Update');
+            console.log('FORMATION record Update');
         }
-    );
+    )
 })
 
 //*********** SUPRIMER UNE FORMATION *********************/

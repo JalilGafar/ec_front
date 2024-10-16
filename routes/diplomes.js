@@ -29,10 +29,13 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     var diplomeForm = req.body
     con.query(SQL
-                `INSERT INTO diplomes
-                (nom_dip, descriptif_dip, niveau,  categorie_id) 
-                VALUES (${diplomeForm.nom_dip}, ${diplomeForm.descriptif_dip}, ${diplomeForm.niveau}, ${diplomeForm.categorie_id});
-                `,
+                `CALL add_diplome_procedure (${diplomeForm.nom_dip},
+                                            ${diplomeForm.descriptif_dip},
+                                            ${diplomeForm.niveau},
+                                            ${diplomeForm.categorie_id},
+                                            ${diplomeForm.domaine_id},
+                                            ${diplomeForm.domaine_id2},
+                                            ${diplomeForm.domaine_id3})`,
                 function (err, result, fields) {
                     if (err) {
                         console.log(err);
@@ -63,8 +66,23 @@ router.put('/', (req, res) =>{
                 res.sendStatus(500);
                 return;
             };
+            //res.sendStatus(200);
+            //console.log('DIPLOME 1/2 record Update ');
+        }
+    );
+    con.query(SQL
+        `CALL update_diplomes_procedure (${editForm.id_dip},
+                                        ${editForm.domaine_id},
+                                        ${editForm.domaine_id2},
+                                        ${editForm.domaine_id3})`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
             res.sendStatus(200);
-            console.log('DIPLOME record Update ');
+            console.log(editForm.id_dip+'  Update');
         }
     );
 })

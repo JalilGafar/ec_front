@@ -7,8 +7,8 @@ var SQL = require('sql-template-strings');
 
 router.post('/', (req, res, next) => {
     var requestForm = req.body;
-    console.log('UserInfo arrive ici !')
-    console.log(JSON.stringify(requestForm))
+   // console.log('UserInfo arrive ici !')
+  //  console.log(JSON.stringify(requestForm))
     con.query(SQL
         `CALL save_client_procedure (${requestForm.name}, ${requestForm.surname}, 
                                   ${requestForm.statuts}, ${requestForm.level}, 
@@ -22,7 +22,7 @@ router.post('/', (req, res, next) => {
                 return;
             };
             console.log('Enregistrement de client');
-            res.status(200).json(result);
+            res.sendStatus(200);
             return;
         }
     );
@@ -43,9 +43,9 @@ router.get('/', (req, res, next) => {
                 res.sendStatus(500);
                 return;
             };
-            console.log('Envoie des RESULTATS !');
+           // console.log('Envoie des RESULTATS !');
             res.status(200).json(result[0]);
-            console.log(result[0]);
+           // console.log(result[0]);
             return;
         }
     );
