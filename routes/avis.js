@@ -18,12 +18,33 @@ router.get('/', (req, res, next) => {
 
 /**Ajout d'un nouvel Avis */
 router.post('/', (req, res) => {
-    var actuForm = req.body
-    console.log('begining Actualite insertion !');
+    var avisForm = req.body
+    console.log('begining Avis insertion !');
     con.query(SQL
-                `INSERT INTO actualite
-                (title, auteur, createdDate, visible, summary, illustration, sujets, content) 
-                VALUES (${actuForm.title}, ${actuForm.auteur}, now(), ${actuForm.visible}, ${actuForm.summary}, ${actuForm.illustration}, ${actuForm.sujets}, ${actuForm.content});
+                `INSERT INTO avis
+                (auteur_avis, content, promotion, id_ecole, id_diplo, content_cours, note_cours, content_ambiance, note_ambiance, content_locaux, note_locaux, content_insert, note_insert, note, campus_id, diplo_id, recommande, born, email, justif) 
+                VALUES (
+                    ${avisForm.auteur_avis}, 
+                    ${avisForm.content}, 
+                    ${avisForm.promotion}, 
+                    ${avisForm.id_ecole}, 
+                    ${avisForm.id_diplo}, 
+                    ${avisForm.content_cours}, 
+                    ${avisForm.note_cours},
+                    ${avisForm.content_ambiance},
+                    ${avisForm.note_ambiance},
+                    ${avisForm.content_locaux},
+                    ${avisForm.note_locaux},
+                    ${avisForm.content_insert},
+                    ${avisForm.note_insert},
+                    ${avisForm.note},
+                    ${avisForm.campus_id},
+                    ${avisForm.diplo_id},
+                    ${avisForm.recommande},
+                    ${avisForm.born},
+                    ${avisForm.email},
+                    ${avisForm.justif}
+                    );
                 `,
                 function (err, result, fields) {
                     if (err) {
@@ -32,7 +53,7 @@ router.post('/', (req, res) => {
                         return;
                     };
                     res.sendStatus(200);
-                    console.log('record of Article inserted');
+                    console.log('record of Avis inserted');
                 }
             );
 });

@@ -42,6 +42,7 @@ const degreeRoutes = require ('./routes/degree');
 const actualiteRoutes = require ('./routes/actualite');
 const avisRoutes = require ('./routes/avis');
 const ecoleAvisRoutes = require ('./routes/ecoleAvis');
+const adversRoutes = require ('./routes/advers');
 
 db.sequelize.sync(/*{force: true}*/).then(() => {
    // console.log('Drop and Resync Db');
@@ -208,6 +209,9 @@ app.use('/api/avis', avisRoutes);
 
 /** Module des avis depuis USER **********/
  app.use('/api/ecoleavis', ecoleAvisRoutes);
+
+ /** Module des publicité **********/
+ app.use('/api/advers', adversRoutes);
 
 
 module.exports = app;
