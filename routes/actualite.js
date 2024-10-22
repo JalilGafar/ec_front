@@ -39,7 +39,7 @@ router.post('/', (req, res) => {
 
 router.get('/blog', (req, res) => {
     var idActu = req.query.idActu;    
-    con.query(`SELECT * FROM ecolecamerdb.actualite WHERE (id_actu=${idActu})`,
+    con.query(`SELECT * FROM actualite WHERE (id_actu=${idActu})`,
         function (err, result, fields) {
             if (err) throw err;
             res.status(200).json(result);

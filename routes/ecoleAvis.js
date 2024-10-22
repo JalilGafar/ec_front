@@ -54,7 +54,7 @@ router.get('/notes', (req, res, next) => {
 
 router.get('/school', (req, res, next) => {
     var idSchool = req.query.idSchool; 
-    con.query(`SELECT * FROM ecolecamerdb.avis where (id_ecole = ${idSchool})`, 
+    con.query(`SELECT * FROM avis where (id_ecole = ${idSchool})`, 
         function (err, result, fields) {
         if (err) throw err;
         res.status(200).json(result);
