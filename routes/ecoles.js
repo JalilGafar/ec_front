@@ -3,6 +3,40 @@ const router =express.Router();
 var con = require('../db');
 var SQL = require('sql-template-strings');
 
+//** Vue des Etablissements */
+router.get('/etablissement', (req, res, next) => {
+    var idEcole = req.query.idEcole;
+    con.query(SQL `SELECT * FROM ecoles WHERE (id_ecol = ${idEcole})`, 
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+           // console.log('Chargement des Ecoles');
+            res.status(200).json(result);
+            return;
+        }
+    );
+});
+
+
+//** liste des établissements lors de la recherche d'établissement */
+router.get('/find', (req, res, next) => {
+    con.query("SELECT id_ecol, sigle_e, nom_e FROM ecoles;", 
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            res.status(200).json(result);
+            return;
+        }
+    );
+});
+
+
 //** Vue des Ecoles depuis Admin */
 router.get('/', (req, res, next) => {
     con.query("SELECT * FROM ecoles;", 

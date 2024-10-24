@@ -3,6 +3,25 @@ const router =express.Router();
 var con = require('../db');
 var SQL = require('sql-template-strings');
 
+
+// Voir une formation en promotion
+
+router.get('/info', (req, res) => {
+    var idForm = req.query.idForm;    
+    con.query(SQL `select * FROM formations WHERE (id_form = ${idForm} )`,
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            res.status(200).json(result);
+            return;
+        }
+        );
+});
+
+
 //**Appel sous Admin de toutes les formation avec leur université, école, campus, ville, catégorie de diplome */
 router.get('/', (req, res, next) => {
     con.query(SQL 

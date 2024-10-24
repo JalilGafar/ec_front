@@ -27,7 +27,6 @@ router.get('/longlist', (req, res, next) => {
         if (err) throw err;
         //console.log(JSON.stringify(result));
         res.status(200).json(result);
-        console.log('see all Metier !')
     });
     res.status(200);
     //console.log("acces à TopNewsSlides !")
