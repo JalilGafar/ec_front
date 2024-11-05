@@ -7,7 +7,7 @@ var SQL = require('sql-template-strings');
 router.get('/list', (req, res, next) => {
     con.query(SQL
         `select id_metier, titre
-        from(SELECT id_metier, titre FROM ecolecamerdb.metier) AA order by rand()
+        from(SELECT id_metier, titre FROM metier) AA order by rand()
         limit 10`, 
         function (err, result, fields) {
         if (err) throw err;
@@ -22,7 +22,7 @@ router.get('/list', (req, res, next) => {
 router.get('/longlist', (req, res, next) => {
     con.query(SQL
         `select id_metier, titre
-        from(SELECT id_metier, titre FROM ecolecamerdb.metier) AA order by rand()`, 
+        from(SELECT id_metier, titre FROM metier) AA order by rand()`, 
         function (err, result, fields) {
         if (err) throw err;
         //console.log(JSON.stringify(result));

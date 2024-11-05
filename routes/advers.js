@@ -43,6 +43,83 @@ router.get('/formation', (req, res, next) => {
 );
 
 
+router.get('/domaine', (req, res, next) => {
+    var idDom = req.query.idDom;
+    con.query(SQL
+        `select id_form, nom_e, sigle_e, logo_e, duree_f, cout_f, diplom_id, nom_dip, filiere_dip, descriptif_dip, ville_cam
+            from
+                campus
+                join
+                (select *
+                from 
+                    (
+                    Select *
+                    from 
+                    (Select *
+					from domaines
+					join	
+						(SELECT *
+						from 
+							diplomes
+							join
+							domaines_diplomes
+							on (diplomes.id_dip = domaines_diplomes.diplomes_id)
+							) AA
+							on (domaines.id_dom = AA.domaines_id)
+							where (id_dom = ${idDom} )) ZZ
+                    join
+                        (SELECT *
+                        from 
+                            ecoles
+                            join
+                            formations
+                            on (ecoles.id_ecol = formations.ecole_f_id)
+                        ) AA
+                        on (ZZ.id_dip = AA.diplom_id)
+                        )BB  
+                    join 
+                        campus_ecoles
+                        on (BB.id_ecol = campus_ecoles.ecole_id)
+                    ) AA
+                    on (campus.id_camp = AA.campus_id) order by rand()
+                limit 4`, 
+        function (err, result, fields) {
+        if (err) throw err;
+        res.status(200).json(result);
+    });
+    res.status(200);
+    }
+);
+
+router.get('/formationSchool', (req, res, next) => {
+    var idSchool = req.query.idSchool;
+    con.query(SQL
+        `select nom_dip, filiere_dip, logo_e, sigle_e, cout_f, id_form
+            from
+                (select *
+                    from
+                    diplomes
+                    join
+                    (select *
+                    from 
+                        formations
+                        join 
+                            ecoles
+                            on (formations.ecole_f_id = ecoles.id_ecol)
+                        where (ecoles.id_ecol = ${idSchool})
+                        ) AA
+                        on (diplomes.id_dip = AA.diplom_id)
+                    ) BB order by rand()
+                limit 5`, 
+        function (err, result, fields) {
+        if (err) throw err;
+        res.status(200).json(result);
+    });
+    res.status(200);
+    }
+);
+
+
 router.get('/school', (req, res, next) => {
     con.query(SQL
         `select id_ecol, nom_e, sigle_e, nom_camp, ville_cam, logo_e, image_e, pub, type_e

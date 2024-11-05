@@ -36,7 +36,7 @@ router.get('/notes', (req, res, next) => {
             (SELECT * 
                 FROM 
                     ecoles
-                    join
+                    left join
                         avis
                         on (ecoles.id_ecol = avis.id_ecole)
                         where (id_ecol = ${idSchool})

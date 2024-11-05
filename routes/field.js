@@ -114,4 +114,46 @@ router.get('/', (req, res, next) => {
 
 });
 
+//** liste des filières de formations pour la page domaine */
+router.get('/page', (req, res, next) => {
+    con.query("SELECT id_dom, nom_dom, branche_dom, illustra_dom FROM domaines BB order by rand();", 
+        function (err, result, fields) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(500);
+                return;
+            };
+            res.status(200).json(result);
+            return;
+        }
+    );
+});
+
+
+//** Vue sur une seul filière */
+router.get('/br', (req, res, next) => {
+    var idFiliere = req.query.idFiliere; 
+    con.query(SQL
+        `SELECT branche_dom FROM domaines group by (branche_dom)`, 
+        function (err, result, fields) {
+        if (err) throw err;
+        res.status(200).json(result);
+    });
+    res.status(200);
+});
+
+
+//** Vue sur une seul filière */
+router.get('/item', (req, res, next) => {
+    var idFiliere = req.query.idFiliere; 
+    con.query(SQL
+        `SELECT * FROM domaines
+        WHERE (id_dom = ${idFiliere} )`, 
+        function (err, result, fields) {
+        if (err) throw err;
+        res.status(200).json(result);
+    });
+    res.status(200);
+});
+
 module.exports = router;
