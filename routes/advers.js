@@ -91,6 +91,7 @@ router.get('/domaine', (req, res, next) => {
     }
 );
 
+// Vue de quelques formations (5) pour un établissement précis
 router.get('/formationSchool', (req, res, next) => {
     var idSchool = req.query.idSchool;
     con.query(SQL
@@ -111,6 +112,34 @@ router.get('/formationSchool', (req, res, next) => {
                         on (diplomes.id_dip = AA.diplom_id)
                     ) BB order by rand()
                 limit 5`, 
+        function (err, result, fields) {
+        if (err) throw err;
+        res.status(200).json(result);
+    });
+    res.status(200);
+    }
+);
+
+
+// Vue de toutes les formations pour un établissement
+router.get('/formus', (req, res, next) => {
+    var idSchool = req.query.idSchool;
+    con.query(SQL
+        `Select id_dip, nom_dip, nom_cat
+            from categories
+            join	
+                (SELECT *
+                from 
+                    diplomes
+                    join
+                    formations
+                    on (formations.diplom_id = diplomes.id_dip)
+                    where (ecole_f_id =  ${idSchool})
+                    ) AA
+                    on (categories.id_cat = AA.categorie_id)
+                    order by nom_dip
+                    
+        `, 
         function (err, result, fields) {
         if (err) throw err;
         res.status(200).json(result);

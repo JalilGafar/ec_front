@@ -143,6 +143,18 @@ router.get('/br', (req, res, next) => {
 });
 
 
+//** Voir les catégories */
+router.get('/categ', (req, res, next) => {
+    con.query(SQL
+        `SELECT nom_cat FROM categories;`, 
+        function (err, result, fields) {
+        if (err) throw err;
+        res.status(200).json(result);
+    });
+    res.status(200);
+});
+
+
 //** Vue sur une seul filière */
 router.get('/item', (req, res, next) => {
     var idFiliere = req.query.idFiliere; 
